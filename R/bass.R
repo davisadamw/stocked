@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-#' # compute the slope of the bass curve with parameters (0.05, 0.4) when half the market limit has been reached:
+#' # compute slope of the curve with parameters (0.05, 0.4) when half the market has been reached:
 #' bass(0.5, 0.05, 0.4)
 bass <- function(M, p, q) {
   (p + q * M) * (1 - M)

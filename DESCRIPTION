@@ -1,13 +1,13 @@
 Package: stocked
-Title: What the Package Does (One Line, Title Case)
+Title: Iterative Bass Model for EV Market Share Prediction
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Adam",
+           family = "Davis",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "davisadamw@gmail.com",
+           comment = c(ORCID = "https://orcid.org/0000-0001-6324-6380"))
+Description: Functions to run iterative bass model. Currently only for EV market share prediction.
 License: What license it uses
 Encoding: UTF-8
 LazyData: true

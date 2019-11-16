@@ -3,7 +3,7 @@
 #' This functions runs all iterations for data that has been prepped WITH BPR COMPUTED
 #'
 #' @param starting_values Data frame formatted correctly for this model, probably from <link to setup function>
-#' @param tot_evs Total number objects to assign, numeric
+#' @param n_to_add Total number objects to assign, numeric
 #' @param tot_iters Number of iterations to run, integer > 0
 #' @param p Innovation parameter, numeric 0-1
 #' @param q Immitation parameter, numeric 0-1
@@ -18,11 +18,11 @@
 #'
 #' @examples
 run_assignment <- function(starting_values,
-                           tot_evs, tot_iters, p, q,
+                           n_to_add, tot_iters, p, q,
                            .keep_all = FALSE) {
 
   # first, calculate the number of EVs to assign in each iteration
-  evs_each_iter <- tot_evs / tot_iters
+  n_each_iter <- n_to_add / tot_iters
 
   if (.keep_all) {
     # if you want to keep all iteration results, will run accumulate (list reduce while keeping intermediates)
@@ -31,7 +31,7 @@ run_assignment <- function(starting_values,
         1:tot_iters,
         single_assignment_step,
         .init = starting_values,
-        evs_this_iter = evs_each_iter,
+        n_this_iter = n_each_iter,
         p = p, q = q) %>%
       bind_rows()
 
@@ -42,7 +42,7 @@ run_assignment <- function(starting_values,
         1:tot_iters,
         single_assignment_step,
         .init = starting_values,
-        evs_this_iter = evs_each_iter,
+        n_this_iter = n_each_iter,
         p = p, q = q)
 
   }

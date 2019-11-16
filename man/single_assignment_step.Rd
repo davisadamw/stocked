@@ -22,5 +22,5 @@ Data frame matching format of \code{data}.
 }
 \description{
 Run a single round of the model, assigning units equal to total_to_assign / n_steps distributed among the regions included in the model
-This will usually be called by \code{\link[=run_assignment]{run_assignment()}}, either directly or via \link{run_assignment_with_variable_bp}
+This should be called by \code{\link[=run_assignment]{run_assignment()}}, either directly or via \link{run_assignment_with_variable_bp}
 }

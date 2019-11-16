@@ -2,7 +2,7 @@
 #' Run a single assignment step for the model
 #'
 #' Run a single round of the model, assigning units equal to total_to_assign / n_steps distributed among the regions included in the model
-#' This will usually be called by [run_assignment()], either directly or via [run_assignment_with_variable_bp]
+#' This should be called by [run_assignment()], either directly or via [run_assignment_with_variable_bp]
 #'
 #' @param data Data frame output from previous step
 #' @param n_this_iter Number to assign this step, probably total / n_steps
@@ -12,7 +12,6 @@
 #'
 #' @return Data frame matching format of \code{data}.
 #'
-#' @export
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr select
 #' @importFrom dplyr one_of

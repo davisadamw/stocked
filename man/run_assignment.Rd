@@ -4,13 +4,13 @@
 \alias{run_assignment}
 \title{Iterate over the model once, completing all assignment steps}
 \usage{
-run_assignment(starting_values, tot_evs, tot_iters, p, q,
+run_assignment(starting_values, n_to_add, tot_iters, p, q,
   .keep_all = FALSE)
 }
 \arguments{
 \item{starting_values}{Data frame formatted correctly for this model, probably from <link to setup function>}
 
-\item{tot_evs}{Total number objects to assign, numeric}
+\item{n_to_add}{Total number objects to assign, numeric}
 
 \item{tot_iters}{Number of iterations to run, integer > 0}
 

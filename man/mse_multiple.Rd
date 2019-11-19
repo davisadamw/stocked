@@ -10,9 +10,24 @@ mse_multiple(par, prepped_data, targ_cols, n_to_add, fixed_predictor,
 \arguments{
 \item{par}{numeric vector used by optimx}
 
+\item{prepped_data}{data frame formatted correctly for this model}
+
+\item{targ_cols}{Vector of unquoted names of cols with EVs/Whatever present each year}
+
+\item{n_to_add}{Vector of number of EVs/whatever to add each year year (length 1 - length of targ_cols)}
+
+\item{fixed_predictor}{unquoted name of explanatory variable that will have constant effect of 1 (usually income)}
+
+\item{other_predictors}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
+
+\item{id_col}{unquoted name of column containing observation unique IDs}
+
 \item{params_order}{character vector, names corresponding to par}
 
-\item{frame}{}
+\item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1*mean, and the largest will be 10*mean)}
+}
+\value{
+Combined mean squared error for a multiple assignment runs over successive years
 }
 \description{
 Calculate summed error over arbitrary number of years of additions

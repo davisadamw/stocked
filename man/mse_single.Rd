@@ -19,6 +19,9 @@ mse_single(prepped_data_bp, starting_vals, target_vals, n_to_add, p, q)
 
 \item{q}{Immitation parameter, numeric 0-1}
 }
+\value{
+Mean squared error for a single assignment run
+}
 \description{
 This'll mostly get called from within mse_multiple
 }

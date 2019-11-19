@@ -10,7 +10,7 @@
 #' @param q Immitation parameter, numeric 0-1
 #'
 #'
-#' @return
+#' @return Mean squared error for a single assignment run
 #' @export
 #' @importFrom dplyr mutate select summarize pull
 #' @importFrom magrittr "%>%"
@@ -19,31 +19,31 @@ mse_single <- function(prepped_data_bp, starting_vals, target_vals, n_to_add, p,
   estimated_future_vals <- prepped_data_bp %>%
     select(market_curr = {{ starting_vals }},
            market_target = {{ target_vals }},
-           market_limit, base_rate) %>%
+           .data$market_limit, .data$base_rate) %>%
     mutate(M_curr = .data$market_curr / .data$market_limit) %>%
     run_assignment(n_to_add = n_to_add, tot_iters = 40, p = p, q = q)
 
   # and get the mse for that year
   estimated_future_vals %>%
-    summarize(mse = mean((market_target - market_curr)^2)) %>%
+    summarize(mse = mean((.data$market_target - .data$market_curr)^2)) %>%
     pull(.data$mse)
 }
 
 #' Calculate summed error over arbitrary number of years of additions
 #'
 #' @param par numeric vector used by optimx
-#' @param prepped_data
-#' @param targ_cols
-#' @param n_to_add
-#' @param fixed_predictor
-#' @param other_predictors
-#' @param id_col
+#' @param prepped_data data frame formatted correctly for this model
+#' @param targ_cols Vector of unquoted names of cols with EVs/Whatever present each year
+#' @param n_to_add Vector of number of EVs/whatever to add each year year (length 1 - length of targ_cols)
+#' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
+#' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
+#' @param id_col unquoted name of column containing observation unique IDs
 #' @param params_order character vector, names corresponding to par
-#' @param frame
+#' @param frame numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)
 #'
-#' @return
+#' @return Combined mean squared error for a multiple assignment runs over successive years
 #' @export
-#' @importFrom rlang set_names
+#' @importFrom rlang set_names as_name
 #' @importFrom purrr pmap_dbl
 #'
 #' @examples
@@ -76,10 +76,33 @@ mse_multiple <- function(par, prepped_data,
 }
 
 
+#' Estimate model coefficients for multiple years of additions
+#'
+#' @param prepped_data data frame formatted correctly for this model
+#' @param id_col unquoted name of column containing observation unique IDs
+#' @param targ_cols Vector of unquoted names of cols with EVs/Whatever present each year
+#' @param n_to_add Vector of number of EVs/whatever to add each year year (length 1 - length of targ_cols)
+#' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
+#' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
+#'
+#' @return Named vector of coefficient estimates
+#' @export
+#' @importFrom purrr map_chr
+#' @importFrom rlang as_name set_names
+#'
+#' @examples
 estimate_model <- function(prepped_data, id_col,
-                           targ_vals, ns_to_add,
-                           fixed_predictor, other_predictors,
-                           starting_vals = NULL) {
+                           targ_cols, n_to_add,
+                           fixed_predictor, other_predictors) {
 
   # create parameter starting values
+  # ... these don't matter so much, but it helps to have them in the right ballpark ...
+  # intercept will start at 1 (equal weight to fixed predictor)
+  # other predictors will start at 0.25
+  # p and q will start at 0.1 and 0.5 respectively
+  # TODO check if we want named list or named vector here
+  param_names <- c('intercept' = 1, map_chr(other_predictors, as_name), 'p', 'q')
+  params_start <- set_names(c(1, rep(0.25, times = length(other_predictors)), 0.1, 0.5),
+                            param_names)
+
 }

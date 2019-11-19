@@ -8,7 +8,7 @@
 #' @param p Innovation parameter, numeric 0-1
 #' @param q Immitation parameter, numeric 0-1
 #'
-#' @return Vector of predictions after n assigned
+#' @return data frame formatted like starting values with added columns of predictions
 #' @export
 #' @importFrom purrr reduce
 #' @importFrom purrr accumulate

@@ -2,7 +2,7 @@
 #' Run a single assignment step for the model
 #'
 #' Run a single round of the model, assigning units equal to total_to_assign / n_steps distributed among the regions included in the model
-#' This should be called by [run_assignment()], either directly or via [run_assignment_with_variable_bp]
+#' This should only be called by [run_assignment()]
 #'
 #' @param data Data frame output from previous step
 #' @param n_this_iter Number to assign this step, probably total / n_steps
@@ -19,7 +19,6 @@
 #' @importFrom dplyr mutate
 #' @importFrom rlang .data
 #'
-#' @examples
 single_assignment_step <- function(data, n_this_iter, iteration, p, q) {
 
   # first, drop columns that get updated each round, ignoring warning about missings

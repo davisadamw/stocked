@@ -4,12 +4,13 @@
 #'
 #' @param prepped_data data frame formatted correctly for this model, probably from <link to setup function>
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
-#' @param other_predictors vector of
-#' @param coefficients named list or vector of parameters
+#' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
+#' @param coefficients named list or vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"
 #' @param id_col unquoted name of column containing observation unique IDs
 #' @param frame numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)
+#' @param .drop_initial logical, for testing only, FALSE -> keep initial base rate ... no tests currently implement this tho
 #'
-#' @return
+#' @return Data frame formatted same as input with base_rate column added
 #' @export
 #' @importFrom tibble tibble enframe
 #' @importFrom dplyr select mutate bind_rows row_number group_by summarize left_join case_when
@@ -19,8 +20,14 @@
 #' @importFrom stats median
 #'
 #' @examples
+#' # calculates bp on example dataset with all coefficients set to 1
+#' calculate_bp(minimal_data,
+#'              fixed_predictor = fixed_pred,
+#'              other_predictors = c(other_pred1, other_pred2),
+#'              coefficients = c("intercept" = 1, other_pred1 = 1, other_pred2 = 1),
+#'              id_col = location)
 calculate_bp <- function(prepped_data, fixed_predictor, other_predictors,
-                         coefficients, id_col, frame = 10) {
+                         coefficients, id_col, frame = 10, .drop_initial = TRUE) {
 
   # grab the name of the fixed variable ... need to clean this code up a bit
   var1 <- grab_single_symbol({{ fixed_predictor }})
@@ -32,8 +39,8 @@ calculate_bp <- function(prepped_data, fixed_predictor, other_predictors,
 
   # if there isn't already an id_col, create one using row number
   if (missing(id_col)) {
-    prepped_data <- prepped_data %>% mutate(fake_id = row_number())
-    id_col <- quo(fake_id)
+    prepped_data <- prepped_data %>% mutate(location_id = row_number())
+    id_col <- quo(location_id)
   }
 
   # first, grab predictor columns and add a column of ones for the intercept
@@ -51,17 +58,21 @@ calculate_bp <- function(prepped_data, fixed_predictor, other_predictors,
     left_join(cd, by = 'var') %>%
     # calculate bp rate for each unique id
     group_by({{ id_col }}) %>%
-    summarize(base_rate = sum(.data$coef * .data$value))
+    summarize(base_rate_init = sum(.data$coef * .data$value))
 
   # correct the base rate to within the frame (all bps must be positive and within a factor of frame from the median)
-  med_bp <- median(bps_first$base_rate)
+  med_bp <- median(bps_first$base_rate_init)
   bp_lo  <- max(med_bp / frame, 0.001)
-  bp_hi  <- med_bp * frame
+  bp_hi  <- max(med_bp * frame, 0.001)
 
   bps_corrected <- bps_first %>%
-    mutate(base_rate2 = case_when(base_rate < bp_lo ~ bp_lo,
-                                  base_rate > bp_hi ~ bp_hi,
-                                  TRUE              ~ base_rate))
+    mutate(base_rate = case_when(.data$base_rate_init < bp_lo ~ bp_lo,
+                                 .data$base_rate_init > bp_hi ~ bp_hi,
+                                 TRUE                         ~ .data$base_rate_init))
+
+  if (.drop_initial) bps_corrected <- select(bps_corrected, -.data$base_rate_init)
+
+  # for testing only, keep initial base rate if
 
   # finally, reattach the base rate to the original data and return the result
   prepped_data %>%

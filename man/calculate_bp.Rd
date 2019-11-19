@@ -5,21 +5,34 @@
 \title{Calculate base penetration rate for arbitrary variables}
 \usage{
 calculate_bp(prepped_data, fixed_predictor, other_predictors, coefficients,
-  id_col, frame = 10)
+  id_col, frame = 10, .drop_initial = TRUE)
 }
 \arguments{
 \item{prepped_data}{data frame formatted correctly for this model, probably from <link to setup function>}
 
 \item{fixed_predictor}{unquoted name of explanatory variable that will have constant effect of 1 (usually income)}
 
-\item{other_predictors}{vector of}
+\item{other_predictors}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
 
-\item{coefficients}{named list or vector of parameters}
+\item{coefficients}{named list or vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"}
 
 \item{id_col}{unquoted name of column containing observation unique IDs}
 
 \item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1*mean, and the largest will be 10*mean)}
+
+\item{.drop_initial}{logical, for testing only, FALSE -> keep initial base rate ... no tests currently implement this tho}
+}
+\value{
+Data frame formatted same as input with base_rate column added
 }
 \description{
 ToDo: fix the error handling a little, it's gross rn
+}
+\examples{
+# calculates bp on example dataset with all coefficients set to 1
+calculate_bp(minimal_data,
+             fixed_predictor = fixed_pred,
+             other_predictors = c(other_pred1, other_pred2),
+             coefficients = c("intercept" = 1, other_pred1 = 1, other_pred2 = 1),
+             id_col = location)
 }

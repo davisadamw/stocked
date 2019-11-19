@@ -7,9 +7,8 @@
 #' @param tot_iters Number of iterations to run, integer > 0
 #' @param p Innovation parameter, numeric 0-1
 #' @param q Immitation parameter, numeric 0-1
-#' @param .keep_all if \code{TRUE} keep results of all iterations, otherwise only keep final assignment
 #'
-#' @return Data frame matching format of \code{starting_values} with all objects assigned.
+#' @return Vector of predictions after n assigned
 #' @export
 #' @importFrom purrr reduce
 #' @importFrom purrr accumulate
@@ -18,83 +17,61 @@
 #'
 #' @examples
 run_assignment <- function(starting_values,
-                           n_to_add, tot_iters, p, q,
-                           .keep_all = FALSE) {
+                           n_to_add, tot_iters, p, q) {
 
   # first, calculate the number of EVs to assign in each iteration
   n_each_iter <- n_to_add / tot_iters
 
-  if (.keep_all) {
-    # if you want to keep all iteration results, will run accumulate (list reduce while keeping intermediates)
-    assignment_result <-
-      accumulate(
-        1:tot_iters,
-        single_assignment_step,
-        .init = starting_values,
-        n_this_iter = n_each_iter,
-        p = p, q = q) %>%
-      bind_rows()
-
-  } else {
-    # if not, use reduce, which works exactly the same but only keep the final result
-    assignment_result <-
-      reduce(
-        1:tot_iters,
-        single_assignment_step,
-        .init = starting_values,
-        n_this_iter = n_each_iter,
-        p = p, q = q)
-
-  }
-
-  return(assignment_result)
+  reduce(1:tot_iters,
+         single_assignment_step,
+         .init = starting_values,
+         n_this_iter = n_each_iter,
+         p = p, q = q)
 }
 
-
-#' Run the assignment with a given set of parameters
+#' Iterate over the model once, completing all assignment steps
 #'
-#' [run_assignment()] assumes BPR is fixed / precalculated, so this first computes it for a given set of parameters then runs the assignment.
-#' This function also keeps a frame on BPR, by default an order of magnitude in either direction
+#' This functions runs all iterations for a single year step
 #'
-#' @param prepped_data Data frame formatted correctly for this model, probably from <link to setup function>
-#' @param params Named list or vector of parameters, as of right now must include all of BP_intercept, BP_coef_commute, BP_coef_gravity, BP_coef_carpool, innov_coef_p, and innov_coef_p
-#' @param tot_evs Total number objects to assign, numeric
-#' @param bpr_frame Maximum divergence allowed for calculated BPR. By default (at 10, the smallest BPR will be 0.1\*mean, and the largest will be 10\*mean)
-#' @param tot_iters Number of iterations to run, integer > 0
+#' @param market_current numeric, vector of current market values
+#' @param market_limit numeric, vector of market limits
+#' @param base_rate numeric, vector of base penetration rates
+#' @param n_to_add numeric, total number of things to assign across all zones
+#' @param p Innovation parameter, numeric 0-1
+#' @param q Immitation parameter, numeric 0-1
+#' @param tot_iters integer > 0, number of iterations to run
 #'
-#' @return Data frame matching format of \code{prepped_data} with all objects assigned.
+#' @return numeric vector of
 #' @export
-#' @importFrom dplyr mutate
+#' @importFrom tibble tibble
+#' @importFrom purrr reduce
 #' @importFrom dplyr pull
-#' @importFrom dplyr case_when
-#' @importFrom rlang .data
 #'
 #' @examples
-run_assignment_with_variable_bp <- function(prepped_data,
-                                            params, tot_evs,
-                                            bpr_frame  = 10,
-                                            tot_iters = 40) {
+run_assignment2 <- function(market_current,
+                            market_limit,
+                            base_rate,
+                            n_to_add, p, q,
+                            tot_iters = 40) {
 
-  # calculate base penetration rate
-  starting_vals_init <- prepped_data %>%
-    mutate(base_rate =
-             1                    * params$BP_intercept +
-             .data$med_income     * 1 +
-             .data$commute        * params$BP_coef_commute +
-             .data$EV_2014_nb     * params$BP_coef_gravity +
-             .data$share_with_cpl * params$BP_coef_carpool)
+  # calculate the number of items to assign in each iteration
+  if (!is.numeric(tot_iters) | as.integer(tot_iters) != tot_iters | tot_iters < 1) {
+    stop('tot_iters must be a positive integer or a number interpretable as one')
+  }
+  n_each_iter <- n_to_add / tot_iters
 
-  baseline_bpr <- max(mean(pull(starting_vals_init, .data$base_rate)), 0.1) * c(1 / bpr_frame, bpr_frame)
+  # first, create the input data as a tibble
+  starting_values <- tibble(market_curr  = market_current,
+                            M_curr       = market_current / market_limit,
+                            market_limit = market_limit,
+                            base_rate    = base_rate)
 
-  # ensure that base_rate never drops negative
-  starting_vals <- starting_vals_init %>%
-    mutate(base_rate = case_when(.data$base_rate < baseline_bpr[1] ~ baseline_bpr[1],
-                                 .data$base_rate > baseline_bpr[2] ~ baseline_bpr[2],
-                                 TRUE                              ~ .data$base_rate))
-
-  run_assignment(starting_vals,
-                 tot_evs, tot_iters,
-                 params$innov_coef_p, params$innov_coef_q,
-                 .keep_all = FALSE)
+  # run the assignment and return the final assignment vector
+  reduce(1:tot_iters,
+         single_assignment_step,
+         .init = starting_values,
+         n_this_iter = n_each_iter,
+         p = p, q = q) %>%
+    pull(.data$market_curr)
 }
 

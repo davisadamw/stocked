@@ -4,8 +4,7 @@
 \alias{run_assignment}
 \title{Iterate over the model once, completing all assignment steps}
 \usage{
-run_assignment(starting_values, n_to_add, tot_iters, p, q,
-  .keep_all = FALSE)
+run_assignment(starting_values, n_to_add, tot_iters, p, q)
 }
 \arguments{
 \item{starting_values}{Data frame formatted correctly for this model, probably from <link to setup function>}
@@ -17,11 +16,9 @@ run_assignment(starting_values, n_to_add, tot_iters, p, q,
 \item{p}{Innovation parameter, numeric 0-1}
 
 \item{q}{Immitation parameter, numeric 0-1}
-
-\item{.keep_all}{if \code{TRUE} keep results of all iterations, otherwise only keep final assignment}
 }
 \value{
-Data frame matching format of \code{starting_values} with all objects assigned.
+Vector of predictions after n assigned
 }
 \description{
 This functions runs all iterations for data that has been prepped WITH BPR COMPUTED

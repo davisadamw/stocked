@@ -29,6 +29,9 @@
 calculate_bp <- function(prepped_data, fixed_predictor, other_predictors,
                          coefficients, id_col, frame = 10, .drop_initial = TRUE) {
 
+  # this is only here to prevent it from throwing a note during compile ... it does not affect code at all
+  location_id <- NULL
+
   # grab the name of the fixed variable ... need to clean this code up a bit
   var1 <- grab_single_symbol({{ fixed_predictor }})
   if (is.null(var1)) stop("fixed_predictor should be a single variable name either unquoted or as string")

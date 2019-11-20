@@ -18,7 +18,7 @@ run_assignment(starting_values, n_to_add, tot_iters, p, q)
 \item{q}{Immitation parameter, numeric 0-1}
 }
 \value{
-Vector of predictions after n assigned
+data frame formatted like starting values with added columns of predictions
 }
 \description{
 This functions runs all iterations for data that has been prepped WITH BPR COMPUTED

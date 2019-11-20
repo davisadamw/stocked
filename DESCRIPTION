@@ -24,4 +24,6 @@ Imports:
     rlang,
     tibble,
     tidyr,
-    stats
+    stats,
+    stringr,
+    tidyselect

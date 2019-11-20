@@ -61,7 +61,7 @@ mse_multiple <- function(par, prepped_data,
     prepped_data_bp <- prepped_data %>%
       calculate_bp(fixed_predictor = {{ fixed_predictor }},
                    other_predictors = {{ other_predictors }},
-                   coefficients = params,
+                   coefficients = par,
                    id_col = {{ id_col }},
                    frame = frame)
 

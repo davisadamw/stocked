@@ -19,6 +19,7 @@
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr pull select
 #' @importFrom tidyselect everything
+#' @importFrom magrittr "%>%"
 #'
 #' @examples
 #' p_start <- c('intercept'=1, 'other_pred1'=1, 'other_pred2'=1, 'p'=0.1, 'q'=0.4)
@@ -56,7 +57,7 @@ mse_model <- function(par, prepped_data,
   # produces list of prediction vectors in chron order
   preds <- map2(select(targets, -ncol(targets)),
                 n_to_add,
-                run_assignment2,
+                run_assignment,
                 market_limit = pull(prepped_data, .data$market_limit),
                 base_rate = pull(prepped_data_bp, .data$base_rate),
                 p = pluck(params, 'p'), q = pluck(params, 'q'))

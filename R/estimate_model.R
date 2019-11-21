@@ -72,24 +72,24 @@ mse_model <- function(par, prepped_data,
 
 #' Estimate model coefficients for multiple years of additions
 #'
-#' @param prepped_data data frame formatted correctly for this model
+#' @param prepped_data data frame formatted correctly for this model (mostly just needs a market_limit column)
 #' @param id_col unquoted name of column containing observation unique IDs
 #' @param targ_cols Vector of unquoted names of cols with EVs/Whatever present each year
-#' @param n_to_add Vector of number of EVs/whatever to add each year year (length 1 - length of targ_cols)
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
+#' @param starting_values named vector of starting values for parameters, can include anything in other_predictors, 'intercept', 'p', and 'q
 #'
-#' @return Named vector of coefficient estimates
+#' @return Named vector of estimated coefficients and MSE of model over all years
 #' @export
 #' @importFrom purrr map_chr
 #' @importFrom rlang as_name set_names
 #'
 #' @examples
-estimate_model <- function(prepped_data, id_col,
-                           targ_cols, n_to_add,
-                           fixed_predictor, other_predictors) {
+estimate_model <- function(prepped_data, id_col, targ_cols,
+                           fixed_predictor, other_predictors,
+                           starting_values = NULL) {
 
-  # create parameter starting values
+  # create parameter list and starting values
   # ... these don't matter so much, but it helps to have them in the right ballpark ...
   # intercept will start at 1 (equal weight to fixed predictor)
   # other predictors will start at 0.25
@@ -98,5 +98,10 @@ estimate_model <- function(prepped_data, id_col,
   param_names <- c('intercept' = 1, map_chr(other_predictors, as_name), 'p', 'q')
   params_start <- set_names(c(1, rep(0.25, times = length(other_predictors)), 0.1, 0.5),
                             param_names)
+
+  # feed this into optimx with the function mse_model in order to find the coefficients that minimize mse
+  # optimization_result <- optimx::optimx(...)
+
+  # return these coefficients in a useful format
 
 }

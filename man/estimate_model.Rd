@@ -4,24 +4,24 @@
 \alias{estimate_model}
 \title{Estimate model coefficients for multiple years of additions}
 \usage{
-estimate_model(prepped_data, id_col, targ_cols, n_to_add, fixed_predictor,
-  other_predictors)
+estimate_model(prepped_data, id_col, targ_cols, fixed_predictor,
+  other_predictors, starting_values = NULL)
 }
 \arguments{
-\item{prepped_data}{data frame formatted correctly for this model}
+\item{prepped_data}{data frame formatted correctly for this model (mostly just needs a market_limit column)}
 
 \item{id_col}{unquoted name of column containing observation unique IDs}
 
 \item{targ_cols}{Vector of unquoted names of cols with EVs/Whatever present each year}
 
-\item{n_to_add}{Vector of number of EVs/whatever to add each year year (length 1 - length of targ_cols)}
-
 \item{fixed_predictor}{unquoted name of explanatory variable that will have constant effect of 1 (usually income)}
 
 \item{other_predictors}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
+
+\item{starting_values}{named vector of starting values for parameters, can include anything in other_predictors, 'intercept', 'p', and 'q}
 }
 \value{
-Named vector of coefficient estimates
+Named vector of estimated coefficients and MSE of model over all years
 }
 \description{
 Estimate model coefficients for multiple years of additions

@@ -9,7 +9,7 @@
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param id_col unquoted name of column containing observation unique IDs
-#' @param params_order character vector, names corresponding to par
+#' @param params_order character vector, names corresponding to par (necessary because optimx strips names)
 #' @param frame numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)
 #'
 #' @return Combined mean squared error for a multiple assignment runs over successive years
@@ -62,7 +62,7 @@ mse_model <- function(par, prepped_data,
                 p = pluck(params, 'p'), q = pluck(params, 'q'))
 
   # calculate error by comparing predictions with targ columns, excluding first
-  # then calculate average by year and sum errors over the years
+  # then calculate average by year and sum errors over the years (might wanna get mean? won't matter tho)
   map2_dbl(select(targets, -1),
            preds,
            ~ mean((.x - .y)^2)) %>%
@@ -77,31 +77,53 @@ mse_model <- function(par, prepped_data,
 #' @param targ_cols Vector of unquoted names of cols with EVs/Whatever present each year
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
-#' @param starting_values named vector of starting values for parameters, can include anything in other_predictors, 'intercept', 'p', and 'q
+#' @param starting_values named vector of starting values for parameters that will override default starts, can include anything in other_predictors, 'intercept', 'p', and 'q
 #'
 #' @return Named vector of estimated coefficients and MSE of model over all years
 #' @export
-#' @importFrom purrr map_chr
-#' @importFrom rlang as_name set_names
+#' @importFrom dplyr select
+#' @importFrom rlang set_names
 #'
 #' @examples
 estimate_model <- function(prepped_data, id_col, targ_cols,
                            fixed_predictor, other_predictors,
                            starting_values = NULL) {
-
   # create parameter list and starting values
-  # ... these don't matter so much, but it helps to have them in the right ballpark ...
+  # ... specific values don't matter so much, but it helps to have them in the right ballpark ...
   # intercept will start at 1 (equal weight to fixed predictor)
-  # other predictors will start at 0.25
+  # other predictors will start at 0.25 ... the awkwardness here is because vectors of names only works in tidyselect
   # p and q will start at 0.1 and 0.5 respectively
-  # TODO check if we want named list or named vector here
-  param_names <- c('intercept' = 1, map_chr(other_predictors, as_name), 'p', 'q')
-  params_start <- set_names(c(1, rep(0.25, times = length(other_predictors)), 0.1, 0.5),
+  param_names <- c('intercept', names(select(prepped_data, {{ other_predictors }})), 'p', 'q')
+  n_other_preds <- length(param_names) - 3
+
+  params_start <- set_names(c(1, rep(0.25, times = n_other_preds), 0.1, 0.5),
                             param_names)
 
+  # update with starting values if any are provided
+  if (!is.null(starting_values)) {
+    params_start <- replace(params_start, names(starting_values), starting_values)
+  }
+
+  #return(list(params_start, params_start2))
+
   # feed this into optimx with the function mse_model in order to find the coefficients that minimize mse
-  # optimization_result <- optimx::optimx(...)
+  # run optimization on the model for multi-year mse, start with parameter starting values
+  optimx_result <- optimx::optimx(params_start,
+                                  mse_model,
+                                  lower = c(rep(-Inf, n_other_preds + 1), 0, 0),
+                                  upper = c(rep( Inf, n_other_preds + 1), 1, 1),
+                                  method = 'L-BFGS-B',
+                                  prepped_data = prepped_data,
+                                  targ_cols = {{ targ_cols }},
+                                  fixed_predictor = {{ fixed_predictor }},
+                                  other_predictors = {{ other_predictors }},
+                                  id_col = {{ id_col }},
+                                  params_order = param_names,
+                                  frame = 10)
+
+  return(optimx_result)
 
   # return these coefficients in a useful format
+
 
 }

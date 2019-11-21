@@ -20,7 +20,7 @@ mse_model(par, prepped_data, targ_cols, fixed_predictor, other_predictors,
 
 \item{id_col}{unquoted name of column containing observation unique IDs}
 
-\item{params_order}{character vector, names corresponding to par}
+\item{params_order}{character vector, names corresponding to par (necessary because optimx strips names)}
 
 \item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1*mean, and the largest will be 10*mean)}
 }

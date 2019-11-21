@@ -18,7 +18,7 @@ estimate_model(prepped_data, id_col, targ_cols, fixed_predictor,
 
 \item{other_predictors}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
 
-\item{starting_values}{named vector of starting values for parameters, can include anything in other_predictors, 'intercept', 'p', and 'q}
+\item{starting_values}{named vector of starting values for parameters that will override default starts, can include anything in other_predictors, 'intercept', 'p', and 'q}
 }
 \value{
 Named vector of estimated coefficients and MSE of model over all years

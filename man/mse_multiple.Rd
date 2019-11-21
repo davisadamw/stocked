@@ -4,7 +4,7 @@
 \alias{mse_multiple}
 \title{Calculate summed error over arbitrary number of years of additions}
 \usage{
-mse_multiple(par, prepped_data, targ_cols, n_to_add, fixed_predictor,
+mse_multiple(par, prepped_data, targ_cols, fixed_predictor,
   other_predictors, id_col, params_order, frame = 10)
 }
 \arguments{
@@ -13,8 +13,6 @@ mse_multiple(par, prepped_data, targ_cols, n_to_add, fixed_predictor,
 \item{prepped_data}{data frame formatted correctly for this model}
 
 \item{targ_cols}{Vector of unquoted names of cols with EVs/Whatever present each year}
-
-\item{n_to_add}{Vector of number of EVs/whatever to add each year year (length 1 - length of targ_cols)}
 
 \item{fixed_predictor}{unquoted name of explanatory variable that will have constant effect of 1 (usually income)}
 
@@ -31,4 +29,14 @@ Combined mean squared error for a multiple assignment runs over successive years
 }
 \description{
 Calculate summed error over arbitrary number of years of additions
+}
+\examples{
+p_start <- c('intercept'=1, 'other_pred1'=1, 'other_pred2'=1, 'p'=0.1, 'q'=0.4)
+mse_multiple(par = p_start,
+             prepped_data = minimal_data,
+             targ_cols = c(val_start:val_s2),
+             fixed_predictor = fixed_pred,
+             other_predictors = c(other_pred1, other_pred2),
+             id_col = location,
+             params_order = names(p_start))
 }

@@ -1,40 +1,8 @@
-#' Calculate error from a single year run
-#'
-#' This'll mostly get called from within mse_multiple
-#'
-#' @param prepped_data_bp data frame formatted correctly for this model, with bp column added
-#' @param starting_vals Unquoted name of starting value column (number in year n)
-#' @param target_vals Unquoted name of target value column (number in year n+1)
-#' @param n_to_add Number of EVs/whatever to add this year
-#' @param p Innovation parameter, numeric 0-1
-#' @param q Immitation parameter, numeric 0-1
-#'
-#'
-#' @return Mean squared error for a single assignment run
-#' @export
-#' @importFrom dplyr mutate select summarize pull
-#' @importFrom magrittr "%>%"
-mse_single <- function(prepped_data_bp, starting_vals, target_vals, n_to_add, p, q) {
-
-  estimated_future_vals <- prepped_data_bp %>%
-    select(market_curr = {{ starting_vals }},
-           market_target = {{ target_vals }},
-           .data$market_limit, .data$base_rate) %>%
-    mutate(M_curr = .data$market_curr / .data$market_limit) %>%
-    run_assignment(n_to_add = n_to_add, tot_iters = 40, p = p, q = q)
-
-  # and get the mse for that year
-  estimated_future_vals %>%
-    summarize(mse = mean((.data$market_target - .data$market_curr)^2)) %>%
-    pull(.data$mse)
-}
-
 #' Calculate summed error over arbitrary number of years of additions
 #'
 #' @param par numeric vector used by optimx
 #' @param prepped_data data frame formatted correctly for this model
 #' @param targ_cols Vector of unquoted names of cols with EVs/Whatever present each year
-#' @param n_to_add Vector of number of EVs/whatever to add each year year (length 1 - length of targ_cols)
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param id_col unquoted name of column containing observation unique IDs
@@ -44,35 +12,58 @@ mse_single <- function(prepped_data_bp, starting_vals, target_vals, n_to_add, p,
 #' @return Combined mean squared error for a multiple assignment runs over successive years
 #' @export
 #' @importFrom rlang set_names as_name
-#' @importFrom purrr pmap_dbl
+#' @importFrom purrr map2 map2_dbl pluck reduce
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr pull select
+#' @importFrom tidyselect everything
 #'
 #' @examples
+#' p_start <- c('intercept'=1, 'other_pred1'=1, 'other_pred2'=1, 'p'=0.1, 'q'=0.4)
+#' mse_multiple(par = p_start,
+#'              prepped_data = minimal_data,
+#'              targ_cols = c(val_start:val_s2),
+#'              fixed_predictor = fixed_pred,
+#'              other_predictors = c(other_pred1, other_pred2),
+#'              id_col = location,
+#'              params_order = names(p_start))
 mse_multiple <- function(par, prepped_data,
-                         targ_cols, n_to_add,
+                         targ_cols,
                          fixed_predictor,
                          other_predictors,
                          id_col,
                          params_order,
                          frame = 10) {
 
-    params <- set_names(par, params_order) %>% as.list()
+  params <- set_names(par, params_order)
 
-    # first, calculate the base rate
-    prepped_data_bp <- prepped_data %>%
-      calculate_bp(fixed_predictor = {{ fixed_predictor }},
-                   other_predictors = {{ other_predictors }},
-                   coefficients = par,
-                   id_col = {{ id_col }},
-                   frame = frame)
+  # first, calculate the base rate
+  prepped_data_bp <- prepped_data %>%
+    calculate_bp(fixed_predictor = {{ fixed_predictor }},
+                 other_predictors = {{ other_predictors }},
+                 coefficients = params,
+                 id_col = {{ id_col }},
+                 frame = frame)
 
-    # then loop over the predictor columns in order with them successively taking the target and then starting columns
-    list(starting_values = targ_cols[1:(length(targ_cols) - 1)],
-         target_values   = targ_cols[2:length(targ_cols)],
-         n_to_add        = n_to_add) %>%
-      pmap_dbl(mse_single,
-               prepped_data_bp = prepped_data_bp,
-               p = params$p, q = params$q) %>%
-      sum()
+  # then grab the target value columns and calculate the number of evs to add
+  targets <- select(prepped_data, {{ targ_cols }})
+  n_to_add <- calculate_target(targets, everything())
+
+  # loop over the targ columns using them as starting values, excluding last
+  # (loops over columns)
+  # produces list of prediction vectors in chron order
+  preds <- map2(select(targets, -ncol(targets)),
+                n_to_add,
+                run_assignment2,
+                market_limit = pull(prepped_data, .data$market_limit),
+                base_rate = pull(prepped_data_bp, .data$base_rate),
+                p = pluck(params, 'p'), q = pluck(params, 'q'))
+
+  # calculate error by comparing predictions with targ columns, excluding first
+  # then calculate average by year and sum errors over the years
+  map2_dbl(select(targets, -1),
+           preds,
+           ~ mean((.x - .y)^2)) %>%
+    sum()
 }
 
 

@@ -98,22 +98,29 @@ center_and_scale_validation <- function(validation, training, ..., na.rm = TRUE)
 #' @param targ_cols vector of unquoted names of cols with EVs/Whatever present each year
 #' @param predictor_cols vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param ml_col unquoted name of column containing the market limit for each unit
+#' @param bump_ml logical, should market limit be set to highest targ value if that is higher than market limit? Will throw error if any target value is higher than market limit otherwise
 #' @param training_data training data to use, if \code{NULL} data will be prepped as training data
 #'
 #' @return data frame prepped for use with the rest of the functions in this package
 #' @export
 #' @importFrom purrr reduce
-#' @importFrom dplyr mutate select
+#' @importFrom dplyr mutate select pull
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
 prep_data <- function(raw_data, id_cols, targ_cols, predictor_cols, ml_col,
+                      bump_ml = FALSE,
                       training_data = NULL) {
 
   # first calculate the highest value reached in targ cols
   targ_max <- raw_data %>%
     select({{ targ_cols }}) %>%
     reduce(pmax)
+
+  if (isFALSE(bump_ml) & any(targ_max > pull(raw_data, {{ ml_col }}))) {
+    stop('At least one target / market level is higher than the stated market limit.
+         If you would like to bump market limit up to cover this error, set bump_ml = TRUE')
+  }
 
   # identify current year data and calculate ML ... also ensure that the market limit >= max market level per unit
   ml_vars <- raw_data %>%

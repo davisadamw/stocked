@@ -5,7 +5,7 @@
 \title{Prepare data for stocked bass modeling}
 \usage{
 prep_data(raw_data, id_cols, targ_cols, predictor_cols, ml_col,
-  training_data = NULL)
+  bump_ml = FALSE, training_data = NULL)
 }
 \arguments{
 \item{raw_data}{data frame}
@@ -17,6 +17,8 @@ prep_data(raw_data, id_cols, targ_cols, predictor_cols, ml_col,
 \item{predictor_cols}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
 
 \item{ml_col}{unquoted name of column containing the market limit for each unit}
+
+\item{bump_ml}{logical, should market limit be set to highest targ value if that is higher than market limit? Will throw error if any target value is higher than market limit otherwise}
 
 \item{training_data}{training data to use, if \code{NULL} data will be prepped as training data}
 }

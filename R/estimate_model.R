@@ -19,20 +19,20 @@
 #'
 #' @examples
 #' p_start <- c('intercept'=1, 'other_pred1'=1, 'other_pred2'=1, 'p'=0.1, 'q'=0.4)
-#' mse_multiple(par = p_start,
-#'              prepped_data = minimal_data,
-#'              targ_cols = c(val_start:val_s2),
-#'              fixed_predictor = fixed_pred,
-#'              other_predictors = c(other_pred1, other_pred2),
-#'              id_col = location,
-#'              params_order = names(p_start))
-mse_multiple <- function(par, prepped_data,
-                         targ_cols,
-                         fixed_predictor,
-                         other_predictors,
-                         id_col,
-                         params_order,
-                         frame = 10) {
+#' mse_model(par = p_start,
+#'           prepped_data = minimal_data,
+#'           targ_cols = c(val_start:val_s2),
+#'           fixed_predictor = fixed_pred,
+#'           other_predictors = c(other_pred1, other_pred2),
+#'           id_col = location,
+#'           params_order = names(p_start))
+mse_model <- function(par, prepped_data,
+                      targ_cols,
+                      fixed_predictor,
+                      other_predictors,
+                      id_col,
+                      params_order,
+                      frame = 10) {
 
   params <- set_names(par, params_order)
 

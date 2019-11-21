@@ -2,7 +2,7 @@
 #'
 #' ToDo: fix the error handling a little, it's gross rn
 #'
-#' @param prepped_data data frame formatted correctly for this model, probably from <link to setup function>
+#' @param prepped_data data frame formatted correctly for this model, probably from \code{prep_data()}
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param coefficients named vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"

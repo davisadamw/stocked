@@ -12,6 +12,7 @@ mse_model(
   other_predictors,
   id_col,
   params_order,
+  return_preds = FALSE,
   frame = 10
 )
 }
@@ -29,6 +30,8 @@ mse_model(
 \item{id_col}{unquoted name of column containing observation unique IDs}
 
 \item{params_order}{character vector, names corresponding to par (necessary because optimx strips names)}
+
+\item{return_preds}{logical, should this method return predictions only (stop before calculating mse)}
 
 \item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)}
 }

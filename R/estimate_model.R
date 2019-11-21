@@ -10,6 +10,7 @@
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param id_col unquoted name of column containing observation unique IDs
 #' @param params_order character vector, names corresponding to par (necessary because optimx strips names)
+#' @param return_preds logical, should this method return predictions only (stop before calculating mse)
 #' @param frame numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)
 #'
 #' @return Combined mean squared error for a multiple assignment runs over successive years
@@ -36,6 +37,7 @@ mse_model <- function(par, prepped_data,
                       other_predictors,
                       id_col,
                       params_order,
+                      return_preds = FALSE,
                       frame = 10) {
 
   params <- set_names(par, params_order)
@@ -60,7 +62,10 @@ mse_model <- function(par, prepped_data,
                 run_assignment,
                 market_limit = pull(prepped_data, .data$market_limit),
                 base_rate = pull(prepped_data_bp, .data$base_rate),
-                p = pluck(params, 'p'), q = pluck(params, 'q'))
+                p = pluck(params, 'p'), q = pluck(params, 'q')) %>%
+    set_names(paste('pred', names(targets)[-1]), sep = '_')
+
+  if (return_preds) return(preds)
 
   # calculate error by comparing predictions with targ columns, excluding first
   # then calculate average by year and sum errors over the years (might wanna get mean? won't matter tho)
@@ -83,7 +88,7 @@ mse_model <- function(par, prepped_data,
 #' @return a list containing the following elements:
 #' * \code{coeffs} a named vector of estimated coefficients
 #' * \code{MSE} numeric combined MSE from all years (FUTURE: will have this split out by year)
-#' * \code{preds} FUTURE: data formatted same as original but with predictions and errors attached
+#' * \code{preds} named list of prediction vectors
 #'
 #' @export
 #' @importFrom dplyr select
@@ -129,6 +134,18 @@ estimate_iterbass <- function(prepped_data, id_col, targ_cols,
   # extract the coefficients from the optimization result
   coeffs_estimated <- df_row_to_vec(optimx_result, one_of(param_names))
 
+  # get the final predictions
+  preds <- mse_model(par = coeffs_estimated,
+                     prepped_data = prepped_data,
+                     targ_cols = {{ targ_cols }},
+                     fixed_predictor = {{ fixed_predictor }},
+                     other_predictors = {{ other_predictors }},
+                     id_col = {{ id_col }},
+                     params_order = names(coeffs_estimated),
+                     return_preds = TRUE,
+                     frame = 10)
+
   list(coeffs = coeffs_estimated,
-       MSE = optimx_result$value)
+       MSE = optimx_result$value,
+       preds = preds)
 }

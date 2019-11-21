@@ -31,7 +31,7 @@ a list containing the following elements:
 \itemize{
 \item \code{coeffs} a named vector of estimated coefficients
 \item \code{MSE} numeric combined MSE from all years (FUTURE: will have this split out by year)
-\item \code{preds} FUTURE: data formatted same as original but with predictions and errors attached
+\item \code{preds} named list of prediction vectors
 }
 }
 \description{

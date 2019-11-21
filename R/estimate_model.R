@@ -77,17 +77,17 @@ mse_model <- function(par, prepped_data,
 #' @param targ_cols Vector of unquoted names of cols with EVs/Whatever present each year
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
-#' @param starting_values named vector of starting values for parameters that will override default starts, can include anything in other_predictors, 'intercept', 'p', and 'q
+#' @param starting_values named vector of starting values that will override default parameter starts, this can include any variable in \code{other_predictors}, 'intercept', 'p', and 'q
 #'
-#' @return Named vector of estimated coefficients and MSE of model over all years
+#' @return a vector of estimated coefficients
 #' @export
 #' @importFrom dplyr select
 #' @importFrom rlang set_names
 #'
 #' @examples
-estimate_model <- function(prepped_data, id_col, targ_cols,
-                           fixed_predictor, other_predictors,
-                           starting_values = NULL) {
+estimate_iterbass <- function(prepped_data, id_col, targ_cols,
+                              fixed_predictor, other_predictors,
+                              starting_values = NULL) {
   # create parameter list and starting values
   # ... specific values don't matter so much, but it helps to have them in the right ballpark ...
   # intercept will start at 1 (equal weight to fixed predictor)

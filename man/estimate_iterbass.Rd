@@ -27,7 +27,12 @@ estimate_iterbass(
 \item{starting_values}{named vector of starting values that will override default parameter starts, this can include any variable in \code{other_predictors}, 'intercept', 'p', and 'q}
 }
 \value{
-a vector of estimated coefficients
+a list containing the following elements:
+\itemize{
+\item \code{coeffs} a named vector of estimated coefficients
+\item \code{MSE} numeric combined MSE from all years (FUTURE: will have this split out by year)
+\item \code{preds} FUTURE: data formatted same as original but with predictions and errors attached
+}
 }
 \description{
 Estimate model coefficients for multiple years of additions

@@ -80,7 +80,11 @@ mse_model <- function(par, prepped_data,
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param starting_values named vector of starting values that will override default parameter starts, this can include any variable in \code{other_predictors}, 'intercept', 'p', and 'q
 #'
-#' @return a vector of estimated coefficients
+#' @return a list containing the following elements:
+#' * \code{coeffs} a named vector of estimated coefficients
+#' * \code{MSE} numeric combined MSE from all years (FUTURE: will have this split out by year)
+#' * \code{preds} FUTURE: data formatted same as original but with predictions and errors attached
+#'
 #' @export
 #' @importFrom dplyr select
 #' @importFrom rlang set_names
@@ -122,9 +126,9 @@ estimate_iterbass <- function(prepped_data, id_col, targ_cols,
                                   params_order = param_names,
                                   frame = 10)
 
-  return(optimx_result)
+  # extract the coefficients from the optimization result
+  coeffs_estimated <- df_row_to_vec(optimx_result, one_of(param_names))
 
-  # return these coefficients in a useful format
-
-
+  list(coeffs = coeffs_estimated,
+       MSE = optimx_result$value)
 }

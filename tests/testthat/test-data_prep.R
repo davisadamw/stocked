@@ -69,6 +69,24 @@ test_that("data prep works as intended", {
 
 })
 
+test_that("data prep throws error if market limit is ever too low and bump_ml not set", {
+  data_for_prep <- tibble(uid = LETTERS[1:10],
+                          targ1 = runif(10),
+                          targ2 = targ1 + 2,
+                          pred1 = rnorm(10) * 2 + 1,
+                          pred2 = rnorm(10) * 1 + 3,
+                          col4l = targ2 + 10,
+                          excess = runif(10)) %>%
+    mutate(targ1 = targ1 + 20)
+
+  expect_error(prep_data(data_for_prep,
+                         id_cols = uid,
+                         targ_cols = c(targ1, targ2),
+                         predictor_cols = c(pred1, pred2),
+                         ml_col = col4l),
+               "set bump_ml = TRUE")
+})
+
 test_that("the target calculation works", {
   tc_data <- tibble(x1 = 1:10, x2 = x1 + 1, x3 = x2 + 2)
   tc_ests <- calculate_target(tc_data, x1:x3)

@@ -1,5 +1,8 @@
 #' Calculate summed error over arbitrary number of years of additions
 #'
+#' This function calculates the overall mean squared error from a set of projections over various years given a set of coefficients.
+#' Should work as long as at least two columns are included in targ_cols
+#'
 #' @param par numeric vector used by optimx
 #' @param prepped_data data frame formatted correctly for this model
 #' @param targ_cols Vector of unquoted names of cols with EVs/Whatever present each year

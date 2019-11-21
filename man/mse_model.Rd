@@ -28,7 +28,8 @@ mse_model(par, prepped_data, targ_cols, fixed_predictor, other_predictors,
 Combined mean squared error for a multiple assignment runs over successive years
 }
 \description{
-Calculate summed error over arbitrary number of years of additions
+This function calculates the overall mean squared error from a set of projections over various years given a set of coefficients.
+Should work as long as at least two columns are included in targ_cols
 }
 \examples{
 p_start <- c('intercept'=1, 'other_pred1'=1, 'other_pred2'=1, 'p'=0.1, 'q'=0.4)

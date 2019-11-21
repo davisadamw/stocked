@@ -14,7 +14,7 @@ calculate_bp(prepped_data, fixed_predictor, other_predictors, coefficients,
 
 \item{other_predictors}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
 
-\item{coefficients}{named list or vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"}
+\item{coefficients}{named vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"}
 
 \item{id_col}{unquoted name of column containing observation unique IDs}
 

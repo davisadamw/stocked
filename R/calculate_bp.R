@@ -5,7 +5,7 @@
 #' @param prepped_data data frame formatted correctly for this model, probably from <link to setup function>
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
-#' @param coefficients named list or vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"
+#' @param coefficients named vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"
 #' @param id_col unquoted name of column containing observation unique IDs
 #' @param frame numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)
 #' @param .drop_initial logical, for testing only, FALSE -> keep initial base rate ... no tests currently implement this tho

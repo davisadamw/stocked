@@ -19,6 +19,3 @@ Named vector
 \description{
 This is mainly being used for
 }
-\examples{
-df_row_to_vec(data.frame(x=1, y=2, z=3), x, y, z, row_no = 1)
-}

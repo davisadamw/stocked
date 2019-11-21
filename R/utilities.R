@@ -9,9 +9,6 @@
 #' @return Named vector
 #' @importFrom dplyr slice select
 #' @importFrom magrittr "%>%"
-#'
-#' @examples
-#' df_row_to_vec(data.frame(x=1, y=2, z=3), x, y, z, row_no = 1)
 df_row_to_vec <- function(data, ..., .row_no = 1) {
   if (!is.numeric(.row_no) | as.integer(.row_no) != .row_no | .row_no < 0 | .row_no > nrow(data)) {
     stop('.row_no must be an integer (or a number interpretable as one) corresponding to a row in data')

@@ -4,8 +4,15 @@
 \alias{run_assignment2}
 \title{Iterate over the model once, completing all assignment steps}
 \usage{
-run_assignment2(market_current, market_limit, base_rate, n_to_add, p, q,
-  tot_iters = 40)
+run_assignment2(
+  market_current,
+  market_limit,
+  base_rate,
+  n_to_add,
+  p,
+  q,
+  tot_iters = 40
+)
 }
 \arguments{
 \item{market_current}{numeric, vector of current market values}

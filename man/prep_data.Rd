@@ -4,8 +4,15 @@
 \alias{prep_data}
 \title{Prepare data for stocked bass modeling}
 \usage{
-prep_data(raw_data, id_cols, targ_cols, predictor_cols, ml_col,
-  bump_ml = FALSE, training_data = NULL)
+prep_data(
+  raw_data,
+  id_cols,
+  targ_cols,
+  predictor_cols,
+  ml_col,
+  bump_ml = FALSE,
+  training_data = NULL
+)
 }
 \arguments{
 \item{raw_data}{data frame}

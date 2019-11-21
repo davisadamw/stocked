@@ -4,8 +4,14 @@
 \alias{estimate_model}
 \title{Estimate model coefficients for multiple years of additions}
 \usage{
-estimate_model(prepped_data, id_col, targ_cols, fixed_predictor,
-  other_predictors, starting_values = NULL)
+estimate_model(
+  prepped_data,
+  id_col,
+  targ_cols,
+  fixed_predictor,
+  other_predictors,
+  starting_values = NULL
+)
 }
 \arguments{
 \item{prepped_data}{data frame formatted correctly for this model (mostly just needs a market_limit column)}

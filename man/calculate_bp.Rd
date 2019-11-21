@@ -4,8 +4,15 @@
 \alias{calculate_bp}
 \title{Calculate base penetration rate for arbitrary variables}
 \usage{
-calculate_bp(prepped_data, fixed_predictor, other_predictors, coefficients,
-  id_col, frame = 10, .drop_initial = TRUE)
+calculate_bp(
+  prepped_data,
+  fixed_predictor,
+  other_predictors,
+  coefficients,
+  id_col,
+  frame = 10,
+  .drop_initial = TRUE
+)
 }
 \arguments{
 \item{prepped_data}{data frame formatted correctly for this model, probably from <link to setup function>}
@@ -18,7 +25,7 @@ calculate_bp(prepped_data, fixed_predictor, other_predictors, coefficients,
 
 \item{id_col}{unquoted name of column containing observation unique IDs}
 
-\item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1*mean, and the largest will be 10*mean)}
+\item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)}
 
 \item{.drop_initial}{logical, for testing only, FALSE -> keep initial base rate ... no tests currently implement this tho}
 }

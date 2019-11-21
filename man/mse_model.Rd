@@ -4,8 +4,16 @@
 \alias{mse_model}
 \title{Calculate summed error over arbitrary number of years of additions}
 \usage{
-mse_model(par, prepped_data, targ_cols, fixed_predictor, other_predictors,
-  id_col, params_order, frame = 10)
+mse_model(
+  par,
+  prepped_data,
+  targ_cols,
+  fixed_predictor,
+  other_predictors,
+  id_col,
+  params_order,
+  frame = 10
+)
 }
 \arguments{
 \item{par}{numeric vector used by optimx}
@@ -22,7 +30,7 @@ mse_model(par, prepped_data, targ_cols, fixed_predictor, other_predictors,
 
 \item{params_order}{character vector, names corresponding to par (necessary because optimx strips names)}
 
-\item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1*mean, and the largest will be 10*mean)}
+\item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)}
 }
 \value{
 Combined mean squared error for a multiple assignment runs over successive years

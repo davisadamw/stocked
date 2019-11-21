@@ -9,9 +9,9 @@ test_that("correct number gets assigned", {
 
   # old method
   assignment_check1 <- md_bp %>%
-    run_assignment(n_to_add = 100,
-                   tot_iters = 40,
-                   p = 0.1, q = 0.4) %>%
+    run_assignment_old(n_to_add = 100,
+                       tot_iters = 40,
+                       p = 0.1, q = 0.4) %>%
     pull(market_curr)
 
   expect_equal(sum(assignment_check1), sum(md_bp$market_curr) + 100)
@@ -19,12 +19,12 @@ test_that("correct number gets assigned", {
   # new method
   assignment_check2 <- md_bp %>%
     mutate(market_pred =
-             run_assignment2(market_current = val_start,
-                             market_limit = market_limit,
-                             base_rate = base_rate,
-                             n_to_add = 100,
-                             tot_iters = 40,
-                             p = 0.1, q = 0.4)) %>%
+             run_assignment(market_current = val_start,
+                            market_limit = market_limit,
+                            base_rate = base_rate,
+                            n_to_add = 100,
+                            tot_iters = 40,
+                            p = 0.1, q = 0.4)) %>%
     pull(market_pred)
 
   expect_equal(sum(assignment_check2), sum(md_bp$market_curr) + 100)
@@ -41,22 +41,22 @@ test_that("assignment performance is independent of evaluation namespace", {
                  id_col = location)
 
   # new method on its own
-  assignment_check1 <- run_assignment2(market_current = md_bp$val_start,
-                                       market_limit = md_bp$market_limit,
-                                       base_rate = md_bp$base_rate,
-                                       n_to_add = 100,
-                                       tot_iters = 40,
-                                       p = 0.1, q = 0.4)
+  assignment_check1 <- run_assignment(market_current = md_bp$val_start,
+                                      market_limit = md_bp$market_limit,
+                                      base_rate = md_bp$base_rate,
+                                      n_to_add = 100,
+                                      tot_iters = 40,
+                                      p = 0.1, q = 0.4)
 
   # new method in mutate
   assignment_check2 <- md_bp %>%
     mutate(market_pred =
-             run_assignment2(market_current = val_start,
-                             market_limit = market_limit,
-                             base_rate = base_rate,
-                             n_to_add = 100,
-                             tot_iters = 40,
-                             p = 0.1, q = 0.4)) %>%
+             run_assignment(market_current = val_start,
+                            market_limit = market_limit,
+                            base_rate = base_rate,
+                            n_to_add = 100,
+                            tot_iters = 40,
+                            p = 0.1, q = 0.4)) %>%
     pull(market_pred)
 
   expect_identical(assignment_check1, assignment_check2)

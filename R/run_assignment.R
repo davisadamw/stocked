@@ -2,22 +2,19 @@
 #'
 #' This functions runs all iterations for data that has been prepped WITH BPR COMPUTED
 #'
-#' @param starting_values Data frame formatted correctly for this model, probably from <link to setup function>
+#' @param starting_values Data frame formatted correctly for this model, probably from \code{prep_data()}
 #' @param n_to_add Total number objects to assign, numeric
 #' @param tot_iters Number of iterations to run, integer > 0
 #' @param p Innovation parameter, numeric 0-1
 #' @param q Immitation parameter, numeric 0-1
 #'
 #' @return data frame formatted like starting values with added columns of predictions
-#' @export
 #' @importFrom purrr reduce
 #' @importFrom purrr accumulate
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr bind_rows
-#'
-#' @examples
-run_assignment <- function(starting_values,
-                           n_to_add, tot_iters, p, q) {
+run_assignment_old <- function(starting_values,
+                               n_to_add, tot_iters, p, q) {
 
   # first, calculate the number of EVs to assign in each iteration
   n_each_iter <- n_to_add / tot_iters
@@ -48,11 +45,11 @@ run_assignment <- function(starting_values,
 #' @importFrom dplyr pull
 #'
 #' @examples
-run_assignment2 <- function(market_current,
-                            market_limit,
-                            base_rate,
-                            n_to_add, p, q,
-                            tot_iters = 40) {
+run_assignment <- function(market_current,
+                           market_limit,
+                           base_rate,
+                           n_to_add, p, q,
+                           tot_iters = 40) {
 
   # calculate the number of items to assign in each iteration
   if (!is.numeric(tot_iters) | as.integer(tot_iters) != tot_iters | tot_iters < 1) {

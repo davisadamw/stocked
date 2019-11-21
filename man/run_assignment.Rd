@@ -4,22 +4,34 @@
 \alias{run_assignment}
 \title{Iterate over the model once, completing all assignment steps}
 \usage{
-run_assignment(starting_values, n_to_add, tot_iters, p, q)
+run_assignment(
+  market_current,
+  market_limit,
+  base_rate,
+  n_to_add,
+  p,
+  q,
+  tot_iters = 40
+)
 }
 \arguments{
-\item{starting_values}{Data frame formatted correctly for this model, probably from <link to setup function>}
+\item{market_current}{numeric, vector of current market values}
 
-\item{n_to_add}{Total number objects to assign, numeric}
+\item{market_limit}{numeric, vector of market limits}
 
-\item{tot_iters}{Number of iterations to run, integer > 0}
+\item{base_rate}{numeric, vector of base penetration rates}
+
+\item{n_to_add}{numeric, total number of things to assign across all zones}
 
 \item{p}{Innovation parameter, numeric 0-1}
 
 \item{q}{Immitation parameter, numeric 0-1}
+
+\item{tot_iters}{integer > 0, number of iterations to run}
 }
 \value{
-data frame formatted like starting values with added columns of predictions
+numeric vector of
 }
 \description{
-This functions runs all iterations for data that has been prepped WITH BPR COMPUTED
+This functions runs all iterations for a single year step
 }

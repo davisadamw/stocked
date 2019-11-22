@@ -63,7 +63,7 @@ mse_model <- function(par, prepped_data,
                 market_limit = pull(prepped_data, .data$market_limit),
                 base_rate = pull(prepped_data_bp, .data$base_rate),
                 p = pluck(params, 'p'), q = pluck(params, 'q')) %>%
-    set_names(paste('pred', names(targets)[-1]), sep = '_')
+    set_names(paste('pred', names(targets)[-1], sep = '_'))
 
   if (return_preds) return(preds)
 

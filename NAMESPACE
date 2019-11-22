@@ -2,7 +2,6 @@
 
 export(bass)
 export(calculate_bp)
-export(calculate_bp_vector)
 export(calculate_target)
 export(center_and_scale)
 export(center_and_scale_validation)

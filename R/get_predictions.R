@@ -38,10 +38,10 @@ predict_iterbass <- function(prepped_data,
 
   # use run_assign to get predictions from using this base rate
   preds <- run_assignment(market_current = pull(prepped_data_bp, {{ start_col }}),
-                 market_limit   = pull(prepped_data_bp, .data$market_limit),
-                 base_rate      = pull(prepped_data_bp, .data$base_rate),
-                 n_to_add       = n_to_add,
-                 p = coeffs$p, q = coeffs$q)
+                          market_limit   = pull(prepped_data_bp, .data$market_limit),
+                          base_rate      = pull(prepped_data_bp, .data$base_rate),
+                          n_to_add       = n_to_add,
+                          p = coeffs['p'], q = coeffs['q'])
 
   prepped_data %>%
     mutate({{ prediction_col }} := preds)

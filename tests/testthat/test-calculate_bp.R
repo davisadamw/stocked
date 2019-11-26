@@ -3,13 +3,13 @@ test_that("simple bp calculation works", {
   bp_results <- minimal_data %>%
     calculate_bp(fixed_predictor = fixed_pred,
                  other_predictors = c(other_pred1, other_pred2),
-                 coefficients = c("intercept" = 10, other_pred1 = 1, other_pred2 = 1),
+                 coefficients = c("intercept" = 10, other_pred1 = 2, other_pred2 = 3),
                  id_col = location)
 
   # compare the results from the bp calculation with all pred effs = 1 and intercept = 10
   # intercept large to ensure frame never comes into play
   expect_equal(sum(bp_results$base_rate),
-               sum(10 + rowSums(minimal_data[,6:8])))
+               sum(10 + minimal_data$fixed_pred + 2*minimal_data$other_pred1 + 3*minimal_data$other_pred2))
 })
 
 test_that("bp floor is fixed", {

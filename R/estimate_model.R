@@ -58,7 +58,7 @@ mse_model <- function(par, prepped_data,
   # produces list of prediction vectors in chron order
   preds <- map2(select(targets, -ncol(targets)),
                 n_to_add,
-                run_assignment,
+                run_assignment_tib,
                 market_limit = pull(prepped_data, .data$market_limit),
                 base_rate = pull(prepped_data_bp, .data$base_rate),
                 p = pluck(params, 'p'), q = pluck(params, 'q')) %>%

@@ -94,7 +94,7 @@ center_and_scale_validation <- function(validation, training, ..., na.rm = TRUE)
 #' This will center and scale predictor variables, add market limit, and remove everything else
 #'
 #' @param raw_data data frame
-#' @param id_cols unquoted name of column containing observation unique IDs
+#' @param id_cols unquoted name of column containing observation unique IDs as well as any other variables to preserve
 #' @param targ_cols vector of unquoted names of cols with EVs/Whatever present each year
 #' @param predictor_cols vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param ml_col unquoted name of column containing the market limit for each unit

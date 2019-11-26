@@ -17,7 +17,7 @@ prep_data(
 \arguments{
 \item{raw_data}{data frame}
 
-\item{id_cols}{unquoted name of column containing observation unique IDs}
+\item{id_cols}{unquoted name of column containing observation unique IDs as well as any other variables to preserve}
 
 \item{targ_cols}{vector of unquoted names of cols with EVs/Whatever present each year}
 

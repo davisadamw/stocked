@@ -11,7 +11,7 @@ single_assignment_step(data, n_this_iter, iteration, p, q)
 
 \item{n_this_iter}{Number to assign this step, probably total / n_steps}
 
-\item{iteration}{Iteration step, integer > 0}
+\item{iteration}{Iteration step, integer > 0 ... pretty much ignored silently}
 
 \item{p}{Innovation parameter, numeric 0-1}
 

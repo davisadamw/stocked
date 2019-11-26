@@ -6,7 +6,7 @@
 #'
 #' @param data Data frame output from previous step
 #' @param n_this_iter Number to assign this step, probably total / n_steps
-#' @param iteration Iteration step, integer > 0
+#' @param iteration Iteration step, integer > 0 ... pretty much ignored silently
 #' @param p Innovation parameter, numeric 0-1
 #' @param q Immitation parameter, numeric 0-1
 #'
@@ -26,16 +26,16 @@ single_assignment_step <- function(data, n_this_iter, iteration, p, q) {
   # rename _current vars to _prev
   # rename the values of market and M from previous round
   mutate(data,
-         market_prev = .data$market_curr,
-         M_prev      = .data$M_curr,
-         iter_no = iteration,
-         A       = bass(.data$M_prev, p, q),
-         W       = .data$base_rate * .data$market_limit * .data$A,
-         W_share = .data$W / sum(.data$W),
+         #iter_no = iteration,
+         #A       = bass(.data$M_curr, p, q),
+         W       = .data$base_rate * .data$market_limit * bass(.data$M_curr, p, q),
+         #W_share = .data$W / sum(.data$W),
          # assignment is weight as share of total weight or remaining capacity, whichever is smaller
-         assign      = pmin(.data$W_share * n_this_iter,
-                            .data$market_limit - .data$market_prev),
-         market_curr = .data$market_prev + .data$assign,
+         # assign      = pmin(.data$W / sum(.data$W) * n_this_iter,
+         #                    .data$market_limit - .data$market_curr),
+         market_curr = .data$market_curr +
+           pmin(.data$W / sum(.data$W) * n_this_iter,
+                .data$market_limit - .data$market_curr),
          M_curr      = .data$market_curr / .data$market_limit)
 
 }

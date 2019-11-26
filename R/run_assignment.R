@@ -15,17 +15,19 @@
 #' @importFrom purrr reduce
 #'
 #' @examples
-#' md_bp <- minimal_data %>%
-#'   calculate_bp(fixed_predictor = fixed_pred,
+#' md_bp <-
+#'   calculate_bp(minimal_data,
+#'                fixed_predictor = fixed_pred,
 #'                other_predictors = c(other_pred1, other_pred2),
 #'                coefficients = c("intercept" = 10, other_pred1 = 1, other_pred2 = 1))
 #'
-#' assignment_check2 <- run_assignment(market_current = md_bp$val_start,
-#'                                     market_limit = md_bp$market_limit,
-#'                                     base_rate = md_bp$base_rate,
-#'                                     n_to_add = 100,
-#'                                     tot_iters = 40,
-#'                                     p = 0.1, q = 0.4)
+#' assignment_check2 <-
+#'   run_assignment(market_current = md_bp$val_start,
+#'                  market_limit = md_bp$market_limit,
+#'                  base_rate = md_bp$base_rate,
+#'                  n_to_add = 100,
+#'                  tot_iters = 40,
+#'                  p = 0.1, q = 0.4)
 run_assignment <- function(market_current,
                              market_limit,
                              base_rate,

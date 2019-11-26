@@ -4,21 +4,33 @@
 \alias{single_assignment_step}
 \title{Run a single assignment step for the model}
 \usage{
-single_assignment_step(data, n_this_iter, iteration, p, q)
+single_assignment_step(
+  market_curr,
+  iteration,
+  base_rate,
+  market_limit,
+  n_this_iter,
+  p,
+  q
+)
 }
 \arguments{
-\item{data}{Data frame output from previous step}
+\item{market_curr}{numeric, vector of current market values}
+
+\item{iteration}{teration step, integer > 0 ... ignored silently, used only in reduce}
+
+\item{base_rate}{numeric, vector of base penetration rates}
+
+\item{market_limit}{numeric, vector of market limits}
 
 \item{n_this_iter}{Number to assign this step, probably total / n_steps}
-
-\item{iteration}{Iteration step, integer > 0 ... pretty much ignored silently}
 
 \item{p}{Innovation parameter, numeric 0-1}
 
 \item{q}{Immitation parameter, numeric 0-1}
 }
 \value{
-Data frame matching format of \code{data}.
+Numeric vector of ending market_current values
 }
 \description{
 Run a single round of the model, assigning units equal to total_to_assign / n_steps distributed among the regions included in the model

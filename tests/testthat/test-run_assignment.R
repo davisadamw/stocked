@@ -28,7 +28,7 @@ test_that("correct number gets assigned", {
 
   expect_equal(sum(assignment_check2), sum(md_bp$market_curr) + 100)
 
-  expect_identical(assignment_check1, assignment_check2)
+  expect_equal(assignment_check1, assignment_check2)
 
 })
 
@@ -61,8 +61,34 @@ test_that("assignment performance is independent of evaluation namespace", {
 
 })
 
-test_that('tot_iters thrown correctly', {
+test_that('tot_iters errors thrown correctly', {
   expect_error(run_assignment2(tot_iters = 0))
   expect_error(run_assignment2(tot_iters = -1))
   expect_error(run_assignment2(tot_iters = 4.1))
+})
+
+test_that('new version runs correctly', {
+  md_bp <- minimal_data %>%
+    calculate_bp(fixed_predictor = fixed_pred,
+                 other_predictors = c(other_pred1, other_pred2),
+                 coefficients = c("intercept" = 10, other_pred1 = 1, other_pred2 = 1))
+
+  # new method on its own
+  assignment_check1 <- run_assignment_tib(market_current = md_bp$val_start,
+                                          market_limit = md_bp$market_limit,
+                                          base_rate = md_bp$base_rate,
+                                          n_to_add = 100,
+                                          tot_iters = 40,
+                                          p = 0.1, q = 0.4)
+
+  # vectors-only method on its own
+  assignment_check2 <- run_assignment(market_current = md_bp$val_start,
+                                      market_limit = md_bp$market_limit,
+                                      base_rate = md_bp$base_rate,
+                                      n_to_add = 100,
+                                      tot_iters = 40,
+                                      p = 0.1, q = 0.4)
+
+  expect_equal(assignment_check1, assignment_check2)
+
 })

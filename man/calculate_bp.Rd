@@ -9,7 +9,6 @@ calculate_bp(
   fixed_predictor,
   other_predictors,
   coefficients,
-  id_col,
   frame = 10
 )
 }
@@ -21,8 +20,6 @@ calculate_bp(
 \item{other_predictors}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
 
 \item{coefficients}{named vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"}
-
-\item{id_col}{unquoted name of column containing observation unique IDs}
 
 \item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)}
 }
@@ -37,6 +34,5 @@ ToDo: fix the error handling a little, it's gross rn
 calculate_bp(minimal_data,
              fixed_predictor = fixed_pred,
              other_predictors = c(other_pred1, other_pred2),
-             coefficients = c("intercept" = 1, other_pred1 = 1, other_pred2 = 1),
-             id_col = location)
+             coefficients = c("intercept" = 1, other_pred1 = 1, other_pred2 = 1))
 }

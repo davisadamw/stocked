@@ -6,16 +6,12 @@
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param coefficients named vector of parameters, including everything in other_predictors, as well as "intercept" "p" and "q"
-#' @param id_col unquoted name of column containing observation unique IDs
 #' @param frame numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)
 #'
 #' @return Data frame formatted same as input with base_rate column added
 #' @export
-#' @importFrom tibble tibble enframe
-#' @importFrom dplyr select mutate bind_rows row_number group_by summarize left_join case_when
-#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr select mutate case_when
 #' @importFrom magrittr "%>%"
-#' @importFrom rlang as_name quo
 #' @importFrom stats median
 #'
 #' @examples
@@ -23,10 +19,9 @@
 #' calculate_bp(minimal_data,
 #'              fixed_predictor = fixed_pred,
 #'              other_predictors = c(other_pred1, other_pred2),
-#'              coefficients = c("intercept" = 1, other_pred1 = 1, other_pred2 = 1),
-#'              id_col = location)
+#'              coefficients = c("intercept" = 1, other_pred1 = 1, other_pred2 = 1))
 calculate_bp <- function(prepped_data, fixed_predictor, other_predictors,
-                         coefficients, id_col, frame = 10) {
+                         coefficients, frame = 10) {
 
   # grab the name of the fixed variable ... need to clean this code up a bit
   var1 <- grab_single_symbol({{ fixed_predictor }})

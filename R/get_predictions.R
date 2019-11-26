@@ -33,7 +33,6 @@ predict_iterbass <- function(prepped_data,
     calculate_bp(fixed_predictor = {{ fixed_predictor }},
                  other_predictors = {{ other_predictors }},
                  coefficients = coeffs,
-                 id_col = {{ id_col }},
                  frame = frame)
 
   # use run_assign to get predictions from using this base rate

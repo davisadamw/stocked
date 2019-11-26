@@ -3,8 +3,7 @@ test_that("simple bp calculation works", {
   bp_results <- minimal_data %>%
     calculate_bp(fixed_predictor = fixed_pred,
                  other_predictors = c(other_pred1, other_pred2),
-                 coefficients = c("intercept" = 10, other_pred1 = 2, other_pred2 = 3),
-                 id_col = location)
+                 coefficients = c("intercept" = 10, other_pred1 = 2, other_pred2 = 3))
 
   # compare the results from the bp calculation with all pred effs = 1 and intercept = 10
   # intercept large to ensure frame never comes into play
@@ -17,8 +16,7 @@ test_that("bp floor is fixed", {
   bp_floor_1 <- minimal_data %>%
     calculate_bp(fixed_predictor = fixed_pred,
                  other_predictors = c(other_pred1, other_pred2),
-                 coefficients = c("intercept" = -10, other_pred1 = 1, other_pred2 = 1),
-                 id_col = location)
+                 coefficients = c("intercept" = -10, other_pred1 = 1, other_pred2 = 1))
   expect_equal(bp_floor_1$base_rate, rep(0.001, 20))
 
   # ensure that the floor comes into play to fix extreme values
@@ -39,8 +37,7 @@ test_that("bp floor is fixed", {
   bp_floor_4 <- minimal_data %>%
     calculate_bp(fixed_predictor = fixed_pred,
                  other_predictors = c(other_pred1, other_pred2),
-                 coefficients = c("intercept" = -10, other_pred1 = 3, other_pred2 = -1),
-                 id_col = location)
+                 coefficients = c("intercept" = -10, other_pred1 = 3, other_pred2 = -1))
   expect_gte(min(bp_floor_4$base_rate), median(bp_floor_4$base_rate) / 10)
 })
 

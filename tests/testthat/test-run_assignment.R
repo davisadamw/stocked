@@ -2,8 +2,7 @@ test_that("correct number gets assigned", {
   md_bp <- minimal_data %>%
     calculate_bp(fixed_predictor = fixed_pred,
                  other_predictors = c(other_pred1, other_pred2),
-                 coefficients = c("intercept" = 10, other_pred1 = 1, other_pred2 = 1),
-                 id_col = location) %>%
+                 coefficients = c("intercept" = 10, other_pred1 = 1, other_pred2 = 1)) %>%
     mutate(market_curr = val_start,
            M_curr      = val_start / market_limit)
 
@@ -37,8 +36,7 @@ test_that("assignment performance is independent of evaluation namespace", {
   md_bp <- minimal_data %>%
     calculate_bp(fixed_predictor = fixed_pred,
                  other_predictors = c(other_pred1, other_pred2),
-                 coefficients = c("intercept" = 10, other_pred1 = 1, other_pred2 = 1),
-                 id_col = location)
+                 coefficients = c("intercept" = 10, other_pred1 = 1, other_pred2 = 1))
 
   # new method on its own
   assignment_check1 <- run_assignment(market_current = md_bp$val_start,

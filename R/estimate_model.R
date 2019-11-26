@@ -47,7 +47,6 @@ mse_model <- function(par, prepped_data,
     calculate_bp(fixed_predictor = {{ fixed_predictor }},
                  other_predictors = {{ other_predictors }},
                  coefficients = params,
-                 id_col = {{ id_col }},
                  frame = frame)
 
   # then grab the target value columns and calculate the number of evs to add

@@ -87,6 +87,7 @@ mse_model <- function(par, prepped_data,
 #' @return a list containing the following elements:
 #' * \code{coeffs} a named vector of estimated coefficients
 #' * \code{MSE} numeric combined MSE from all years (FUTURE: will have this split out by year)
+#' * \code{iterations} number of iterations before convergence
 #' * \code{preds} named list of prediction vectors
 #'
 #' @export
@@ -146,5 +147,6 @@ estimate_iterbass <- function(prepped_data, id_col, targ_cols,
 
   list(coeffs = coeffs_estimated,
        MSE = optimx_result$value,
+       iterations = optimx_result$fevals,
        preds = preds)
 }

@@ -10,8 +10,7 @@ calculate_bp(
   other_predictors,
   coefficients,
   id_col,
-  frame = 10,
-  .drop_initial = TRUE
+  frame = 10
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ calculate_bp(
 \item{id_col}{unquoted name of column containing observation unique IDs}
 
 \item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)}
-
-\item{.drop_initial}{logical, for testing only, FALSE -> keep initial base rate ... no tests currently implement this tho}
 }
 \value{
 Data frame formatted same as input with base_rate column added

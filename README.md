@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.org/davisadamw/stocked.svg?branch=master)](https://travis-ci.org/davisadamw/stocked)
 <!-- badges: end -->
 
 The goal of stocked is to make it easier to keep all the code straight

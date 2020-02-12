@@ -31,7 +31,7 @@ predict_iterbass(
 
 \item{other_predictors}{vector of unquoted variable names of explanatory variables for which coefficient will be estimated}
 
-\item{prediction_col}{unquoted or quated name for column to assing predictions to, defaults to \code{pred}}
+\item{prediction_col}{unquoted or quoted name for column to assing predictions to, defaults to \code{pred}}
 
 \item{frame}{numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)}
 }
@@ -41,4 +41,21 @@ Data frame formatted as \code{prepped_data} but with an added column of predicti
 \description{
 Predicts values given a correctly formatted dataset, set of parameters, starting value, and number of items to distribute
 FUTURE: if I can figure out how to get BP to work without having whole dataset as input, this will also input/output vectors
+}
+\examples{
+# set the predictor values
+p_start <- c('intercept'=1, 'other_pred1'=0.25, 'other_pred2'=0.25, 'p'=0.1, 'q'=0.5)
+# prep data
+md_prepped <-
+  prep_data(minimal_data, location, c(val_start:val_s2), c(fixed_pred:rare_pred), market_limit)
+# forcast the addition of 40 items
+md_one_forward <-
+  predict_iterbass(md_prepped,
+                   id_col = location,
+                   start_col = val_s2,
+                   n_to_add = 40,
+                   coeffs = p_start,
+                   fixed_predictor = fixed_pred,
+                   other_predictors = c(other_pred1, other_pred2),
+                   prediction_col = val_s3)
 }

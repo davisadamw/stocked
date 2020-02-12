@@ -21,6 +21,22 @@
 #'
 #'
 #' @examples
+#' # set the predictor values
+#' p_start <- c('intercept'=1, 'other_pred1'=0.25, 'other_pred2'=0.25, 'p'=0.1, 'q'=0.5)
+#' # prep data
+#' md_prepped <-
+#'   prep_data(minimal_data, location, c(val_start:val_s2), c(fixed_pred:rare_pred), market_limit)
+#' # forcast the addition of 40 items
+#' md_one_forward <-
+#'   predict_iterbass(md_prepped,
+#'                    id_col = location,
+#'                    start_col = val_s2,
+#'                    n_to_add = 40,
+#'                    coeffs = p_start,
+#'                    fixed_predictor = fixed_pred,
+#'                    other_predictors = c(other_pred1, other_pred2),
+#'                    prediction_col = val_s3)
+
 predict_iterbass <- function(prepped_data,
                              id_col, start_col,
                              n_to_add, coeffs,

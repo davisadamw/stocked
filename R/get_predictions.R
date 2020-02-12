@@ -10,7 +10,7 @@
 #' @param coeffs named vector of model parameters, must include every variable in \code{other_predictors}, as well as 'intercept', 'p', and 'q
 #' @param fixed_predictor unquoted name of explanatory variable that will have constant effect of 1 (usually income)
 #' @param other_predictors vector of unquoted variable names of explanatory variables for which coefficient will be estimated
-#' @param prediction_col unquoted or quated name for column to assing predictions to, defaults to \code{pred}
+#' @param prediction_col unquoted or quoted name for column to assing predictions to, defaults to \code{pred}
 #' @param frame numeric; maximum divergence allowed for calculated BP. By default, the smallest BP will be 0.1\*mean, and the largest will be 10\*mean)
 #'
 #' @return Data frame formatted as \code{prepped_data} but with an added column of predictions

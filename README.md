@@ -34,3 +34,10 @@ library(stocked)
 bass(M = 0.5, p = 0.05, q = 0.4)
 #> [1] 0.125
 ```
+
+## Bug Notes:
+
+The `prep_data()` function argument `bump_ml` currently throws an error
+if left as default (`FALSE`). Recommend setting it to true and manually
+ensuring starting value / total is not higher than allowed if you want
+to mimic non-bumped ml behavior.

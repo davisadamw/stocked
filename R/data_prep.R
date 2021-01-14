@@ -98,7 +98,7 @@ center_and_scale_validation <- function(validation, training, ..., na.rm = TRUE)
 #' @param targ_cols vector of unquoted names of cols with EVs/Whatever present each year
 #' @param predictor_cols vector of unquoted variable names of explanatory variables for which coefficient will be estimated
 #' @param ml_col unquoted name of column containing the market limit for each unit
-#' @param bump_ml logical, should market limit be set to highest targ value if that is higher than market limit? Will throw error if any target value is higher than market limit otherwise
+#' @param bump_ml logical, should market limit be set to highest targ value if that is higher than market limit? Will throw error if any target value is higher than market limit otherwise ... Currently just always throws an error if set to FALSE
 #' @param training_data training data to use, if \code{NULL} data will be prepped as training data
 #'
 #' @return data frame prepped for use with the rest of the functions in this package
